@@ -1,0 +1,45 @@
+*{
+  box-sizing: border-box;
+  align-content: center;
+  text-align: center;
+}
+header {
+  height: auto;
+  background-color: green;
+  width: 100%;
+  clear: both;
+}
+h1 {
+  margin-top: 0;
+  padding: 2%;
+  text-align: center;
+}
+.form {
+  height: auto;
+  width: 30%;
+  background-color: blue;
+  float: left;
+  border: 1px solid black;
+  display: block;
+}
+.toDoItems {
+  width: 70%;
+  height: 700px;
+  float: left;
+  font-size: 30px;
+}
+.formStart {
+  float: none;
+}
+#input {
+  height: 500px;
+  width: 70%;
+  padding: 2%;
+}
+fieldset {
+  border: 0;
+}
+p {
+  font-weight: bold;
+  font-size: 25px;
+}

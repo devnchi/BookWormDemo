@@ -1,0 +1,11 @@
+body{
+background-image: url("./img/bookwormArt.jpg");
+background-size: cover;
+}
+.container div {
+  background-color: gold;
+  color: white;
+  padding: 5%;
+  margin-top: 2%;
+  width: 50%;
+}
