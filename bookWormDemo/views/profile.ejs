@@ -1,70 +1,66 @@
+<!-- I got help with this code from Abigail Ezedomwen since we had similar application goals. -->
+
 <!doctype html>
 <html>
+
 <head>
-    <title>21 Savage Fan Site</title>
-    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
-    <link rel="stylesheet" href="style.css">
+  <title>bookMark</title>
+  <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
+  <link href="https://fonts.googleapis.com/css?family=PT+Sans+Narrow&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
+  <link rel="stylesheet" href="profile.css">
 </head>
+
 <body>
-<div class="container">
+  <section class="container">
+    <section class="text-left page-header">
+      <h1 id="hide">Welcome Home!  <%= user.local.email %></h1>
+      <a href="/logout" class="btn btn-default btn-sm" id="button1">Logout</a>
 
-    <div class="page-header text-center">
-        <h1><span class="fa fa-anchor"></span> Profile Page</h1>
-        <a href="/logout" class="btn btn-default btn-sm">Logout</a>
-    </div>
+    </section>
+    <section class="level">
 
-    <div class="row">
-
-        <!-- LOCAL INFORMATION -->
-        <div class="col-sm-6">
-            <div class="well">
-                <h3><span class="fa fa-user"></span> Local</h3>
-
-                <% if (user.local.email) { %>
-                    <p>
-                        <strong>id</strong>: <%= user._id %><br>
-                        <strong>email</strong>: <%= user.local.email %><br>
-                        <strong>password</strong>: <%= user.local.password %>
-                    </p>
-
-                    <a href="/unlink/local" class="btn btn-default">Unlink</a>
-                <% } else { %>
-                    <a href="/connect/local" class="btn btn-default">Connect Local</a>
-                <% } %>
-
-            </div>
-        </div>
-        <div class="col-sm-6">
-          <h3>Messages</h3>
-            <ul class="messages">
-              <% for(var i=0; i< messages.length; i++) {%>
-                <% if (user.local.email == messages[i].name) { %>
-                  <li class="message">
-                    <span><%= messages[i].name%></span>
-                    <span><%= messages[i].msg %></span>
-                    <span><%= messages[i].thumbUp -= messages[i].thumbDown %></span>
-                    <span><i class="fa fa-thumbs-up" aria-hidden="true"></i></span>
-                    <span><i class="fa fa-thumbs-down" aria-hidden="true"></i></span>
-                    <span><i class="fa fa-trash" aria-hidden="true"></i></span>
-                  </li>
-                <% } %>
-              <% } %>
-          </ul>
-
-          <h2>Add a message</h2>
+      <section class="JournalEntry">
+        <h2>Enter a Review</h2>
         <% if (user.local.email) { %>
-          <form action="/messages" method="POST">
-            <input type="text" value="<%= user.local.email %>" name="name">
-            <input type="text" placeholder="message" name="msg">
-            <button type="submit">Submit</button>
-          </form>
-        </div>
+        <form action="/notes" method="POST">
+          <input id = "hide" class="userName" type="text" name="userName" value="<%= user.local.email %>">
+          <br>
+          <!-- <input class="userName" type="text" name="userName" value="<%= user.local.email %>"> -->
+          <label for="noteTitle"> Title, Author:  </label>
+          <br>
+          <input class="noteTitle" type="text" value="" name="noteTitle">
+          <br>
+          <label for="noteBody"> Review: </label>
+          <br>
+          <textarea type="number" class="noteBody" placeholder="write your lil heart out" name="noteBody" value=""></textarea>
+          <br>
+          <button type="submit">Enter Review</button>
+        </form>
         <% } %>
+      </section>
 
-</div>
+      <section class="JournalList">
+        <h3>Previous Reviews:</h3>
+        <span>  </span>
+        <ul class="messages">
+          <% for(var i=0; i<notes.length; i++) {%>
+          <li class="message">
+            <strong><span contenteditable="true" id="JournTitle"> <%= notes[i].title %></span></strong>
+            <button data-user="<%= user.local.email %>" class="updateButton">Update Review</button>
+            <i data-user="<%= user.local.email %>" class="far fa-trash-alt"></i><br>
+            <span contenteditable="true" > <%= notes[i].notebody %></span>
+          </li>
+          <% } %>
+        </ul>
+      </section>
 
-<script src="main.js"></script>
+    </section>
 
+
+    <script src="main.js"></script>
+    <!-- <script src="https://kit.fontawesome.com/077191d827.js" crossorigin="anonymous"></script> -->
 </body>
+
 </html>

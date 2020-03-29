@@ -1,0 +1,12 @@
+body {
+  background-color: gold;
+  text-align: center;
+  align-content: center;
+}
+textarea {
+  width: 50%;
+  height: 200px;
+}
+#hide {
+  display: none;
+}

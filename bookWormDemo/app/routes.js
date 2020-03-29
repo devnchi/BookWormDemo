@@ -1,3 +1,6 @@
+// I got help with this code from Abigail Ezedomwen since we had similar application goals.
+
+var ObjectId = require('mongodb').ObjectId
 module.exports = function(app, passport, db) {
 
 // normal routes ===============================================================
@@ -9,12 +12,11 @@ module.exports = function(app, passport, db) {
 
     // PROFILE SECTION =========================
     app.get('/profile', isLoggedIn, function(req, res) {
-        db.collection('messages').find().toArray((err, result) => {
+        db.collection('notes').find({user: req.user.local.email}).toArray((err, result) => {
           if (err) return console.log(err)
           res.render('profile.ejs', {
             user : req.user,
-            messages: result
-
+            notes: result
           })
         })
     });
@@ -27,19 +29,20 @@ module.exports = function(app, passport, db) {
 
 // message board routes ===============================================================
 
-    app.post('/messages', (req, res) => {
-      db.collection('messages').save({name: req.body.name, msg: req.body.msg, thumbUp: 0, thumbDown:0}, (err, result) => {
+    app.post('/notes', (req, res) => {
+      db.collection('notes').insertOne({title: req.body.noteTitle, notebody: req.body.noteBody, user: req.body.userName}, (err, result) => {
         if (err) return console.log(err)
         console.log('saved to database')
         res.redirect('/profile')
       })
     })
 
-    app.put('/messages', (req, res) => {
-      db.collection('messages')
-      .findOneAndUpdate({name: req.body.name, msg: req.body.msg}, {
+    app.put('/notes', (req, res) => {
+      console.log(req.body.noteTitle, req.body.noteBody)
+      db.collection('notes')
+      .findOneAndUpdate({user: req.body.user, noteTitle: req.body.title},{
         $set: {
-          thumbUp:req.body.thumbUp + 1
+          notebody: req.body.noteBody
         }
       }, {
         sort: {_id: -1},
@@ -50,27 +53,23 @@ module.exports = function(app, passport, db) {
       })
     })
 
-    app.put('/messagesDown', (req, res) => {
-      db.collection('messages')
-        .findOneAndUpdate({name: req.body.name, msg: req.body.msg}, {
-          $set: {
-            thumbUp:req.body.thumbUp - 1
-          }
-        }, {
-          sort: {_id: -1},
-          upsert: true
-        }, (err, result) => {
-          if (err) return res.send(err)
-          res.send(result)
-        })
-      })
-
-    app.delete('/messages', (req, res) => {
-      db.collection('messages').findOneAndDelete({name: req.body.name, msg: req.body.msg}, (err, result) => {
+    app.delete('/notes', (req, res) => {
+      db.collection('notes').findOneAndDelete({user: req.body.user, noteTitle: req.body.title, noteBody: req.body.notebody}, (err, result) => {
         if (err) return res.send(500, err)
-        res.send('Message deleted!')
+        res.send('Note deleted!')
       })
     })
+
+
+
+    app.get('/editnote/:note_id', isLoggedIn, function(req, res) {
+      db.collection('notes').findOne({_id: new ObjectId(req.params.note_id)}, (err, databaseResult) =>{
+        res.render('edit.ejs', {
+          note: databaseResult
+        });
+      })
+    });
+
 
 // =============================================================================
 // AUTHENTICATE (FIRST LOGIN) ==================================================
@@ -113,6 +112,7 @@ module.exports = function(app, passport, db) {
     // local -----------------------------------
     app.get('/unlink/local', isLoggedIn, function(req, res) {
         var user            = req.user;
+        user.local.name     = undefined;
         user.local.email    = undefined;
         user.local.password = undefined;
         user.save(function(err) {

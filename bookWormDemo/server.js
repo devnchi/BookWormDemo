@@ -1,4 +1,4 @@
-// server.js
+// I got help with this code from Abigail Ezedomwen since we had similar application goals.
 
 // set up ======================================================================
 // get all the tools we need
@@ -64,4 +64,4 @@ app.use(flash()); // use connect-flash for flash messages stored in session
 
 // launch ======================================================================
 app.listen(port);
-console.log('The magic happens on port ' + port);
+console.log('Check this app out on ' + port);
